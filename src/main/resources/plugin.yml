@@ -1,0 +1,7 @@
+name: ADialogAPI
+version: '1.0.0'
+main: me.arkadarktime.aDialogAPI.ADialogAPI
+api-version: '1.21'
+load: STARTUP
+authors: [ ArkaDarkTime ]
+description: Make easy your dialogs with new paper DialogAPI!
