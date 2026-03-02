@@ -102,15 +102,15 @@ ADialogAPI().getApi().showDialog(player, "dialog_id");
 
 The main command is `/adialogapi` (aliases: `/adapi`).
 
-| Command                          | Description                          | Permission                      |
-|----------------------------------|--------------------------------------|---------------------------------|
-| `/adialogapi help`               | View all available commands          | <br>`adialogapi.command.help`   |
-| `/adialogapi show <id> [player]` | Open a dialog for yourself or others | <br>`adialogapi.command.show`   |
-| `/adialogapi list`               | List all loaded dialogs              | <br>`adialogapi.command.list`   |
-| `/adialogapi reload [id]`        | Reload all or a specific dialog      | <br>`adialogapi.command.reload` |
-| `/adialogapi create <id>`        | Create a new dialog template         | <br>`adialogapi.command.create` |
-| `/adialogapi delete <id>`        | Remove an existing dialog            | <br>`adialogapi.command.delete` |
-| `/adialogapi info <id>`          | View detailed info about a dialog    | <br>`adialogapi.command.info`   |
+| Command                          | Description                          | Permission                  |
+|----------------------------------|--------------------------------------|-----------------------------|
+| `/adialogapi help`               | View all available commands          | `adialogapi.command.help`   |
+| `/adialogapi show <id> [player]` | Open a dialog for yourself or others | `adialogapi.command.show`   |
+| `/adialogapi list`               | List all loaded dialogs              | `adialogapi.command.list`   |
+| `/adialogapi reload [id]`        | Reload all or a specific dialog      | `adialogapi.command.reload` |
+| `/adialogapi create <id>`        | Create a new dialog template         | `adialogapi.command.create` |
+| `/adialogapi delete <id>`        | Remove an existing dialog            | `adialogapi.command.delete` |
+| `/adialogapi info <id>`          | View detailed info about a dialog    | `adialogapi.command.info`   |
 
 ---
 
