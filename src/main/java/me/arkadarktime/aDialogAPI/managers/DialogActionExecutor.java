@@ -194,10 +194,10 @@ public class DialogActionExecutor {
     // Placeholder
 
     private String applyPlaceholders(String input, Player player, Map<String, String> inputs) {
-        String result = input.replace("<player>", player.getName());
         for (Map.Entry<String, String> entry : inputs.entrySet()) {
-            result = result.replace("<input:" + entry.getKey() + ">", entry.getValue());
+            input = input.replace("<input:" + entry.getKey() + ">", entry.getValue());
         }
-        return result;
+        input = input.replace("<player>", player.getName());
+        return input;
     }
 }

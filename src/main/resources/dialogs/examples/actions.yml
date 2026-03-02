@@ -174,7 +174,7 @@ actions:
       # console_command - Command executed as the console (full OP permissions).
       # Ideal for economy plugins, permission plugins, etc.
       - type: console_command
-        command: "say [Server] <player> completed the actions demo"
+        command: "say <player> completed the actions demo"
 
       # show_dialog - Opens another dialog by its relative path (without .yml extension).
       - type: show_dialog
