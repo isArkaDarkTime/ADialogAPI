@@ -117,7 +117,7 @@ inputs:
 actions:
   ok:
     label: "<green>✔ Save Profile"
-    tooltip: "Test"
+    tooltip: "<gray>Save profile"
     # Example for getting values from input
     after_actions:
       - type: message
