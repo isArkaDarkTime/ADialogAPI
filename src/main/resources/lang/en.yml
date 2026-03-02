@@ -1,0 +1,74 @@
+prefix: "<color:#33ff77>ADialogAPI</color> <gray>•</gray><reset>"
+
+errors:
+  no-permission: "<prefix> <red>You don't have permission to do this!"
+  unknown-subcommand: "<prefix> <red>Unknown subcommand '<subcommand>'. Try /adialogapi help"
+  player-only: "<prefix> <red>This command can only be used by players."
+  target-not-found: "<prefix> <red>Player '<name>' not found."
+  on-cooldown: "<prefix> <yellow>This dialog is on cooldown. Try again in <white><seconds>s</white>."
+  generic: "<prefix> <red>An unexpected error occurred. Please contact an administrator."
+
+commands:
+  dialog:
+    reload:
+      success: "<prefix> <green>All dialogs and language reloaded successfully!"
+      success-dialog: "<prefix> <green>Dialog '<dialog>' reloaded!"
+      not-found: "<prefix> <red>Dialog '<dialog>' not found."
+
+    create:
+      usage: "<prefix> <red>Usage: /adialogapi create <name>"
+      success: "<prefix> <green>Dialog '<dialog>' created successfully!"
+      already-exists: "<prefix> <red>Dialog '<dialog>' already exists."
+
+    delete:
+      usage: "<prefix> <red>Usage: /adialogapi delete <name>"
+      success: "<prefix> <green>Dialog '<dialog>' deleted!"
+      not-found: "<prefix> <red>Dialog '<dialog>' not found."
+
+    show:
+      usage: "<prefix> <red>Usage: /adialogapi show <dialog> [player]"
+      success: "<prefix> <green>Showing dialog '<dialog>' to <name>."
+      not-found: "<prefix> <red>Dialog '<dialog>' not found."
+
+    list:
+      header: "<prefix> <gray>Loaded dialogs:"
+      row: " <gray>•</gray> <green><name></green> <dark_gray>[</dark_gray><yellow><type></yellow><dark_gray>]</dark_gray> <command_entry> <open_permission>"
+      footer: "<prefix> <gray>Total: <white><count></white> dialog(s)."
+      empty: "<prefix> <gray>No dialogs loaded."
+      command-entry:
+        command: "<aqua>/<command></aqua>"
+        empty: "<gray>-</gray>"
+      permission-entry:
+        permission: "<gray>(<permission>)</gray>"
+        empty: "<gray>-</gray>"
+
+    info:
+      usage: "<prefix> <red>Usage: /adialogapi info <name>"
+      not-found: "<prefix> <red>Dialog '<dialog>' not found."
+      header: "<newline><prefix> <gray>Dialog info — <white><dialog></white>:"
+      footer: " <dark_gray>└──────────────────────</dark_gray>"
+      row:
+        - " <dark_gray>│</dark_gray> <gray>Type:       </gray> <yellow><type></yellow>"
+        - " <dark_gray>│</dark_gray> <gray>File:       </gray> <white>dialogs/<file_path>.yml</white>"
+        - " <dark_gray>│</dark_gray> <gray>Command:    </gray> <command_entry>"
+        - " <dark_gray>│</dark_gray> <gray>Permission: </gray> <open_permission>"
+        - " <dark_gray>│</dark_gray> <gray>Escapable:  </gray> <escape>"
+        - " <dark_gray>│</dark_gray> <gray>Body items: </gray> <white><body_count></white>"
+      values:
+        true: "<green>Yes</green>"
+        false: "<red>No</red>"
+        empty: "<gray>-</gray>"
+
+    help:
+      - ""
+      - "<color:#33ff77>ADialogAPI</color> <dark_gray>—</dark_gray> Command list"
+      - ""
+      - " <gray>• <green><click:suggest_command:'/adialogapi reload'>/adialogapi reload [dialog]</click></green></gray> — Reload all dialogs or a single one"
+      - " <gray>• <green><click:suggest_command:'/adialogapi create '>/adialogapi create <name></click></green></gray> — Create a new dialog"
+      - " <gray>• <green><click:suggest_command:'/adialogapi delete '>/adialogapi delete <name></click></green></gray> — Delete a dialog"
+      - " <gray>• <green><click:suggest_command:'/adialogapi show '>/adialogapi show <dialog> [player]</click></green></gray> — Show a dialog to yourself or another player"
+      - " <gray>• <green><click:suggest_command:'/adialogapi list'>/adialogapi list</click></green></gray> — List all loaded dialogs"
+      - " <gray>• <green><click:suggest_command:'/adialogapi info '>/adialogapi info <name></click></green></gray> — View detailed dialog info"
+      - ""
+      - " <gray><i>Click a command to insert it into chat</i></gray>"
+      - ""

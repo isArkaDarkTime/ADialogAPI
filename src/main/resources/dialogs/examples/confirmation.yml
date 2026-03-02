@@ -1,0 +1,76 @@
+# ─────────────────────────────────────────────
+# Dialog: confirmation example
+# A decision window with Yes and No buttons.
+# Recommended for dangerous or irreversible actions.
+# ─────────────────────────────────────────────
+
+# Displayed at the top of the dialog window.
+title: "<red><bold>⚠ Are you sure?"
+
+# true  - Player can press ESC to close the dialog.
+# false - Player must click the OK button to close.
+can_close_with_escape: true
+
+# Cooldown in seconds before the same player can open this dialog again.
+# 0 = no cooldown (default).
+cooldown: 0
+
+# Dialog type:
+# - notice: single OK button
+# - confirmation: Yes / No buttons
+type: confirmation
+
+# Optional: register a command that opens this dialog.
+# Leave empty ("") to skip.
+open_command: "confirm-reset"
+
+# Optional: permission required to use open_command.
+# Leave empty ("") to allow all players.
+open_permission: "adialogapi.dialog.confirm-reset"
+
+body:
+  - type: text
+    content: "<gray>This action will <red>reset your progress</red>."
+
+  - type: text
+    content: "<gray>This <bold>cannot</bold> be undone!"
+
+  # Decorative item icon representing danger.
+  - type: item
+    material: TNT
+    count: 1
+
+# Button configuration.
+# Supported after_action types:
+#   command, console, message, broadcast,
+#   show_dialog, give_item, take_item, title, sound,
+#   effect, xp, close
+#
+# Placeholders available in all value fields:
+#   <player>    - Name of the player who clicked.
+#   <input:key> - Value of an input field by key.
+actions:
+  "yes":
+    # Button label
+    label: "<green>✔ Yes, reset"
+    # Optional hover tooltip.
+    tooltip: "<gray>Confirm and reset your data"
+    # Actions that will be performed when you click
+    after_actions:
+      # Example: run a command, open a dialog, give item, etc.
+      # <player> will be replaced with clicking player's name.
+      - type: console
+        command: "reset-progress <player>"
+      # Sends message to player.
+      - type: message
+        content: "<green>Your progress has been reset!"
+
+  "no":
+    # Button label
+    label: "<red>✘ Cancel"
+    # Optional hover tooltip.
+    tooltip: "<gray>Close without changes"
+    # Decline button. Can also have after_actions.
+    after_actions:
+      - type: message
+        content: "<yellow>Cancelled."

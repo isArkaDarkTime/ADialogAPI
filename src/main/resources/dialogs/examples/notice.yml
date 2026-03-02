@@ -1,0 +1,41 @@
+# ─────────────────────────────────────────────
+# Dialog: notice example
+# A simple informational window with a single OK button.
+# Recommended for announcements, tips, or welcome messages.
+# ─────────────────────────────────────────────
+
+# Displayed at the top of the dialog window.
+title: "<gold><bold>✦ Welcome to the Server!"
+
+# true  - Player can press ESC to close the dialog.
+# false - Player must click the OK button to close.
+can_close_with_escape: false
+
+# Cooldown in seconds before the same player can open this dialog again.
+# 0 = no cooldown (default).
+cooldown: 0
+
+# Dialog type:
+# - notice: single OK button
+# - confirmation: Yes / No buttons
+type: notice
+
+# Optional: register a command that opens this dialog.
+# Leave empty ("") to skip.
+open_command: "welcome"
+
+# Optional: permission required to use open_command.
+# Leave empty ("") to allow all players.
+open_permission: ""
+
+body:
+  # Simple text line in the dialog.
+  - type: text
+    content: "<gray>Hello, traveler! We're glad to see you here."
+
+  # Empty text used as spacer.
+  - type: text
+    content: ""
+
+  - type: text
+    content: "<yellow>Explore, build, and have fun!"

@@ -1,0 +1,74 @@
+prefix: "<color:#33ff77>ADialogAPI</color> <gray>•</gray><reset>"
+
+errors:
+  no-permission: "<prefix> <red>У вас недостаточно прав для этого!"
+  unknown-subcommand: "<prefix> <red>Неизвестная подкоманда '<subcommand>'. Используйте /adialogapi help"
+  player-only: "<prefix> <red>Эта команда только для игроков."
+  target-not-found: "<prefix> <red>Игрок '<name>' не найден."
+  on-cooldown: "<prefix> <yellow>Этот диалог недавно открывался. Повторите через <white><seconds> сек</white>."
+  generic: "<prefix> <red>Произошла неизвестная ошибка. Обратитесь к администратору."
+
+commands:
+  dialog:
+    reload:
+      success: "<prefix> <green>Все диалоги и язык перезагружены!"
+      success-dialog: "<prefix> <green>Диалог '<dialog>' перезагружен!"
+      not-found: "<prefix> <red>Диалог '<dialog>' не найден."
+
+    create:
+      usage: "<prefix> <red>Использование: /adialogapi create <название>"
+      success: "<prefix> <green>Диалог '<dialog>' создан!"
+      already-exists: "<prefix> <red>Диалог '<dialog>' уже существует."
+
+    delete:
+      usage: "<prefix> <red>Использование: /adialogapi delete <название>"
+      success: "<prefix> <green>Диалог '<dialog>' удалён!"
+      not-found: "<prefix> <red>Диалог '<dialog>' не найден."
+
+    show:
+      usage: "<prefix> <red>Использование: /adialogapi show <диалог> [игрок]"
+      success: "<prefix> <green>Диалог '<dialog>' показан игроку <name>."
+      not-found: "<prefix> <red>Диалог '<dialog>' не найден."
+
+    list:
+      header: "<prefix> <gray>Загруженные диалоги:"
+      row: " <gray>•</gray> <green><name></green> <dark_gray>[</dark_gray><yellow><type></yellow><dark_gray>]</dark_gray> <command_entry> <open_permission>"
+      footer: "<prefix> <gray>Всего: <white><count></white> диалог(ов)."
+      empty: "<prefix> <gray>Нет загруженных диалогов."
+      command-entry:
+        command: "<aqua>/<command></aqua>"
+        empty: "<gray>-</gray>"
+      permission-entry:
+        permission: "<gray>(<permission>)</gray>"
+        empty: "<gray>-</gray>"
+
+    info:
+      usage: "<prefix> <red>Использование: /adialogapi info <название>"
+      not-found: "<prefix> <red>Диалог '<dialog>' не найден."
+      header: "<newline><prefix> <gray>Информация о диалоге <white><dialog></white>:"
+      footer: " <dark_gray>└──────────────────────</dark_gray>"
+      row:
+        - " <dark_gray>│</dark_gray> <gray>Тип:         </gray> <yellow><type></yellow>"
+        - " <dark_gray>│</dark_gray> <gray>Файл:        </gray> <white>dialogs/<file_path>.yml</white>"
+        - " <dark_gray>│</dark_gray> <gray>Команда:     </gray> <command_entry>"
+        - " <dark_gray>│</dark_gray> <gray>Право:       </gray> <open_permission>"
+        - " <dark_gray>│</dark_gray> <gray>Закрываемый: </gray> <escape>"
+        - " <dark_gray>│</dark_gray> <gray>Элементов:   </gray> <white><body_count></white>"
+      values:
+        true: "<green>Да</green>"
+        false: "<red>Нет</red>"
+        empty: "<gray>-</gray>"
+
+    help:
+      - ""
+      - "<color:#33ff77>ADialogAPI</color> <dark_gray>-</dark_gray> Команды"
+      - ""
+      - " <gray>• <green><click:suggest_command:'/adialogapi reload'>/adialogapi reload [диалог]</click></green></gray> - Перезагрузить диалог(и) и сообщения"
+      - " <gray>• <green><click:suggest_command:'/adialogapi create '>/adialogapi create <название></click></green></gray> - Создать диалог"
+      - " <gray>• <green><click:suggest_command:'/adialogapi delete '>/adialogapi delete <название></click></green></gray> - Удалить диалог"
+      - " <gray>• <green><click:suggest_command:'/adialogapi show '>/adialogapi show <диалог> [игрок]</click></green></gray> - Показать диалог"
+      - " <gray>• <green><click:suggest_command:'/adialogapi list'>/adialogapi list</click></green></gray> - Список всех диалогов"
+      - " <gray>• <green><click:suggest_command:'/adialogapi info '>/adialogapi info <название></click></green></gray> - Информация о диалоге"
+      - ""
+      - " <gray><i>Нажмите на команду, чтобы вставить её в чат</i></gray>"
+      - ""

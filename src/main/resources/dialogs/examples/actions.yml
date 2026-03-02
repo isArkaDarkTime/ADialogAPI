@@ -1,0 +1,190 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Dialog: actions example
+# Demonstrates every available after_action type.
+#
+# - Available action types
+#   command         - Execute a command as the player.
+#   console         - Execute a command as the server console (full permissions).
+#   message         - Send a private message to the player.
+#   broadcast       - Send a message to all online players.
+#   show_dialog     - Open another dialog by its path (without .yml).
+#   give_item       - Give an item to the player (overflow drops at their feet).
+#   take_item       - Remove an item from the player's inventory.
+#   title           - Show a title / subtitle on screen.
+#   sound           - Play a sound for the player.
+#   effect          - Apply a potion effect.
+#   xp              - Give experience levels or points.
+#   close           - Close the dialog without any further actions.
+#
+# - Placeholders (work in all value/command/content/dialog fields)
+#   <player> - Name of the player who clicked the button.
+#   <input:key> - Submitted value of an input field with this key.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Displayed at the top of the dialog window.
+title: "<gold><bold>⚙ Actions Showcase"
+
+# true  - Player can press ESC to close the dialog.
+# false - Player must click the OK button to close.
+can_close_with_escape: true
+
+# Cooldown in seconds before the same player can open this dialog again.
+# 0 = no cooldown (default).
+cooldown: 0
+
+# Dialog type:
+# - notice: single OK button
+# - confirmation: Yes / No buttons
+type: confirmation
+
+# Optional: register a command that opens this dialog.
+# Leave empty ("") to skip.
+open_command: "actions-demo"
+
+# Optional: permission required to use open_command.
+# Leave empty ("") to allow all players.
+open_permission: ""
+
+body:
+  - type: text
+    content: "<gray>This dialog demonstrates every available <yellow>action type</yellow>."
+
+  - type: text
+    content: ""
+
+  - type: text
+    content: "<aqua>▸ <white>Yes <gray>- runs all actions in sequence."
+
+  - type: text
+    content: "<red>▸ <white>No  <gray>- demonstrates the close action."
+
+  - type: text
+    content: ""
+
+  - type: item
+    material: COMMAND_BLOCK
+    count: 1
+
+inputs:
+  # Values are accessible via <input:key> in any action field.
+  - type: text
+    key: "custom_message"
+    label: "<white>Custom broadcast message"
+    width: 200
+    initial_value: "Hello from <player>!"
+    max_length: 64
+
+  - type: single_option
+    key: "reward_tier"
+    label: "<white>Choose a reward tier"
+    width: 200
+    options:
+      - id: "bronze"
+        label: "<#cd7f32>Bronze - 1 Iron Ingot"
+      - id: "silver"
+        label: "<gray>Silver - 1 Gold Ingot"
+      - id: "gold"
+        label: "<gold>Gold - 1 Diamond"
+
+  - type: bool
+    key: "want_speed"
+    label: "<white>Give me Speed I for 10 seconds?"
+    initial_value: "true"
+    on_true: "yes"
+    on_false: "no"
+
+  - type: number_range
+    key: "xp_amount"
+    label: "<white>How many XP levels to give?"
+    min: 0
+    max: 10
+    initial_value: "3"
+    step: 1
+    suffix: "%s: %s lvl"
+
+actions:
+  "yes":
+    label: "<green>✔ Run all actions"
+    tooltip: "<gray>Demonstrate every action type"
+    after_actions:
+      # message - Private message to the player. Supports MiniMessage and placeholders.
+      - type: message
+        content: "<green>✔ <white>Hello, <yellow><player></yellow>! All actions running."
+
+      # broadcast - Message sent to ALL online players. Uses the "custom_message" input.
+      - type: broadcast
+        content: "<gold>[Broadcast] <white><input:custom_message>"
+
+      # title - Title shown on screen.
+      # fade_in / stay / fade_out are in ticks (20 ticks = 1 second).
+      - type: title
+        title: "<gold><bold>✦ Welcome!"
+        subtitle: "<gray>You clicked <yellow>Yes</yellow>, <player>"
+        fade_in: 10
+        stay: 60
+        fade_out: 15
+
+      # sound - Sound played only for this player.
+      # Use sound keys from: https://minecraft.wiki/w/Sounds.json
+      - type: sound
+        sound: "entity.player.levelup"
+        volume: 1.0
+        pitch: 1.0
+
+      # give_item - Adds items to the player's inventory. Overflow drops at their feet.
+      - type: give_item
+        material: BREAD
+        count: 3
+
+      - type: give_item
+        material: DIAMOND
+        count: 1
+
+      # take_item - Removes items from the player's inventory (silently ignores if missing).
+      - type: take_item
+        material: BREAD
+        count: 1
+
+      # potion_effect - Applies a potion effect.
+      # duration: ticks (200 = 10 seconds).
+      # amplifier: 0 = level I, 1 = level II, etc.
+      # Full effect list: https://jd.papermc.io/paper/1.21.7/org/bukkit/potion/PotionEffectType.html
+      - type: potion_effect
+        effect: SPEED
+        duration: 200
+        amplifier: 0
+
+      - type: potion_effect
+        effect: NIGHT_VISION
+        duration: 600
+        amplifier: 0
+
+      # xp - Gives XP to the player.
+      # levels: true -> whole levels (/xp add N levels)
+      # levels: false -> raw XP points (/xp add N points)
+      - type: xp
+        amount: 3
+        levels: true
+
+      # run_command - Command executed as the player (their permission level applies).
+      # Works with or without a leading "/".
+      - type: run_command
+        command: "me chose reward: <input:reward_tier>"
+
+      # console_command - Command executed as the console (full OP permissions).
+      # Ideal for economy plugins, permission plugins, etc.
+      - type: console_command
+        command: "say [Server] <player> completed the actions demo"
+
+      # show_dialog - Opens another dialog by its relative path (without .yml extension).
+      - type: show_dialog
+        dialog: "examples/quests/quest2"
+
+  "no":
+    label: "<red>✘ Just close"
+    tooltip: "<gray>Close without doing anything"
+    after_actions:
+      # close - Explicitly closes the dialog.
+      # Buttons already close the dialog on click, but 'close' is useful
+      # as a standalone action when you want nothing else to happen.
+      - type: close

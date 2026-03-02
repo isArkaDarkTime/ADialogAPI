@@ -1,7 +1,53 @@
 name: ADialogAPI
-version: '1.0.0'
+version: '${project.version}'
 main: me.arkadarktime.aDialogAPI.ADialogAPI
 api-version: '1.21'
 load: STARTUP
 authors: [ ArkaDarkTime ]
 description: Make easy your dialogs with new paper DialogAPI!
+
+commands:
+  adialogapi:
+    permission: adialogapi.command.use
+    aliases:
+      - dialogapi
+
+permissions:
+  adialogapi.*:
+    description: Full access
+    children:
+      adialogapi.command.reload: true
+      adialogapi.command.create: true
+      adialogapi.command.delete: true
+      adialogapi.command.show: true
+      adialogapi.command.list: true
+      adialogapi.command.info: true
+      adialogapi.command.help: true
+
+  adialogapi.command.reload:
+    description: Reload config
+    default: op
+
+  adialogapi.command.create:
+    description: Create dialogs
+    default: op
+
+  adialogapi.command.delete:
+    description: Delete dialogs
+    default: op
+
+  adialogapi.command.show:
+    description: Show dialogs to players
+    default: op
+
+  adialogapi.command.list:
+    description: List all dialogs
+    default: op
+
+  adialogapi.command.info:
+    description: View dialog info
+    default: op
+
+  adialogapi.command.help:
+    description: View help
+    default: true

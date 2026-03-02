@@ -1,0 +1,132 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Dialog: inputs example
+# Demonstrates all four supported input field types.
+#
+# Input values submitted by the player are available in after_actions
+# using the <input:key> placeholder.
+#
+# Supported input types:
+#   text          - Single-line text field.
+#   bool          - Checkbox (returns on_true or on_false string).
+#   number_range  - Numeric slider between min and max.
+#   single_option - Mutually exclusive radio-style options.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Displayed at the top of the dialog window.
+title: "<yellow><bold>✏ Player Profile Setup"
+
+# true  - Player can press ESC to close the dialog.
+# false - Player must click the OK button to close.
+can_close_with_escape: true
+
+# Cooldown in seconds before the same player can open this dialog again.
+# 0 = no cooldown (default).
+cooldown: 0
+
+# Dialog type:
+# - notice: single OK button
+# - confirmation: Yes / No buttons
+type: notice
+
+# Dialog type:
+# - notice: single OK button
+# - confirmation: Yes / No buttons
+open_command: "setup-profile"
+
+# Optional: permission required to use open_command.
+# Leave empty ("") to allow all players.
+open_permission: "adialogapi.dialog.setup-profile"
+
+body:
+  - type: text
+    content: "<gray>Fill in your profile details below."
+
+  - type: text
+    content: ""
+
+# Input fields collected from the player.
+# Each entry must define:
+#   type - Input type.
+#   key - Unique identifier used to retrieve the value.
+inputs:
+  # text - Single-line free-text input.
+  - type: text
+    key: "nickname"
+    # Label displayed above the input.
+    label: "<white>Nickname"
+    # Width of the input field in pixels (Minecraft default: 200).
+    width: 200
+    # Whether to show the label above the field (default: true).
+    labeled: true
+    # Pre-filled value when the dialog opens (default: empty).
+    initial_value: ""
+    # Maximum number of characters the player can enter (default: 32).
+    max_length: 24
+
+  # bool - Checkbox. Returns on_true when checked, on_false when unchecked.
+  - type: bool
+    key: "receive_announcements"
+    # Text displayed next to the checkbox.
+    label: "<white>Receive server announcements"
+    # Whether the checkbox is checked by default (default: false).
+    initial_value: "true"
+    # String returned when the box is CHECKED (default: "true").
+    on_true: "enabled"
+    # String returned when the box is UNCHECKED (default: "false").
+    on_false: "disabled"
+
+  # number_range - Numeric slider. Returns a float, displayed as int when value == int.
+  - type: number_range
+    key: "chat_volume"
+    # Label displayed above the slider.
+    label: "<white>Chat notification volume"
+    # Width of the number range field in pixels (Minecraft default: 200).
+    width: 200
+    # Minimum allowed value (required).
+    min: 0
+    # Maximum allowed value (required).
+    max: 100
+    # Starting position of the slider (optional; defaults to min).
+    initial_value: "50"
+    # Slider step (default: 1.0).
+    step: 5
+    # Format string for the display label: first %s = label, second %s = value.
+    suffix: "%s: %s%%"
+
+  # single_option - Radio-style option selector. Returns the selected option's id.
+  - type: single_option
+    key: "preferred_language"
+    # Label displayed above the options.
+    label: "<white>Preferred language"
+    # Width of the option container in pixels (Minecraft default: 200).
+    width: 200
+    # Whether the label is rendered (default: true).
+    labeled: true
+    # Each option can be a plain string (id = label) or a map with id + label.
+    # Can be either:
+    #   - simple string (used as both id and label)
+    #   - map with custom id and label
+    options:
+      - id: "en"
+        label: "<green>English"
+      - id: "ru"
+        label: "<green>Русский"
+      - id: "ua"
+        label: "<green>Українська"
+
+actions:
+  ok:
+    label: "<green>✔ Save Profile"
+    tooltip: "Test"
+    # Example for getting values from input
+    after_actions:
+      - type: message
+        content: "<green>Profile saved!"
+      - type: message
+        content: "<gray>- Nickname: <white><input:nickname>"
+      - type: message
+        content: "<gray>- Announcements: <white><input:receive_announcements>"
+      - type: message
+        content: "<gray>- Chat volume: <white><input:chat_volume>%"
+      - type: message
+        content: "<gray>- Language: <white><input:preferred_language>"

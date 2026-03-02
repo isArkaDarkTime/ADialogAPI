@@ -1,0 +1,5 @@
+# Plugin language
+language: en
+
+# Logging debug info
+debug: false

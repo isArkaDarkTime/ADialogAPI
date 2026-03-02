@@ -1,0 +1,64 @@
+# ─────────────────────────────────────────────
+# Dialog: items example
+# Demonstrates mixing text and multiple item blocks.
+# Consecutive item entries are displayed side-by-side in a row.
+# ─────────────────────────────────────────────
+
+# Displayed at the top of the dialog window.
+title: "<aqua><bold>★ Daily Reward"
+
+# false - Player must click Collect to close (prevents accidental ESC).
+can_close_with_escape: false
+
+# Cooldown in seconds before the same player can open this dialog again.
+# 86400 = 24 hours.
+# 0 = no cooldown.
+cooldown: 86400
+
+# Dialog type:
+# - notice: single OK button
+# - confirmation: Yes / No buttons
+type: notice
+
+# Optional: register a command that opens this dialog.
+# Leave empty ("") to skip.
+open_command: "daily"
+
+# Optional: permission required to use open_command.
+# Leave empty ("") to allow all players.
+open_permission: "adialogapi.dialog.daily"
+
+body:
+  - type: text
+    content: "<gray>Your daily reward is ready!"
+
+  # item body blocks - displayed as icon rows in the dialog.
+  # material: any Bukkit Material name (case-insensitive).
+  # count: visual stack size shown on the icon (does NOT give the item automatically - use give_item action).
+  - type: item
+    material: EMERALD
+    count: 5
+
+  - type: item
+    material: GOLDEN_APPLE
+    count: 1
+
+  - type: text
+    content: "<green>Come back tomorrow for more!"
+
+actions:
+  ok:
+    # Button label
+    label: "<green>✔ Collect"
+    # Actions that will be performed when you click
+    after_actions:
+      # give_item actually adds items to the player's inventory.
+      # overflow is dropped at the player's feet.
+      - type: give_item
+        material: EMERALD
+        count: 5
+      - type: give_item
+        material: GOLDEN_APPLE
+        count: 1
+      - type: message
+        content: "<green>Enjoy your daily reward, <yellow><player></yellow>!"

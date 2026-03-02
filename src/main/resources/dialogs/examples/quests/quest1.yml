@@ -1,0 +1,62 @@
+# ─────────────────────────────────────────────
+# Dialog: quest1 example
+# Example quest with Yes / No confirmation.
+# Demonstrates: player accepts quest -> after_actions executed.
+# ─────────────────────────────────────────────
+
+# Displayed at the top of the dialog window.
+title: "<light_purple><bold>⚔ New Quest Available!"
+
+# true  - Player can press ESC to close the dialog.
+# false - Player must click the OK button to close.
+can_close_with_escape: true
+
+# Cooldown in seconds before the same player can open this dialog again.
+# 0 = no cooldown (default).
+cooldown: 0
+
+# Dialog type:
+# - notice: single OK button
+# - confirmation: Yes / No buttons
+type: confirmation
+
+# Optional: register a command that opens this dialog.
+# Leave empty ("") to skip.
+open_command: "quest-start"
+
+# Optional: permission required to use open_command.
+# Leave empty ("") to allow all players.
+open_permission: "adialogapi.dialog.quest"
+
+body:
+  - type: text
+    content: "<gray>The village elder needs your help."
+
+  - type: text
+    content: ""
+
+  - type: item
+    material: WRITTEN_BOOK
+    count: 1
+
+  - type: text
+    content: "<yellow>Will you accept this quest?"
+
+actions:
+  "yes":
+    label: "<green>✔ Accept"
+    tooltip: "<gray>Start the quest"
+    after_actions:
+      # Example command for give quest item
+      - type: command
+        command: "give-quest-item <player> WRITTEN_BOOK"
+      # Opens next dialog in quest sequence.
+      - type: show_dialog
+        dialog: "examples/quests/quest2"
+
+  "no":
+    label: "<red>✘ Decline"
+    tooltip: "<gray>Maybe later"
+    after_actions:
+      - type: message
+        content: "<yellow>You can take the quest later."
