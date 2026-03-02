@@ -93,7 +93,7 @@ Listen to custom events to integrate ADialogAPI with your systems:
 You can open dialogs via the `DialogManager`:
 
 ```java
-ADialogAPI.getApi().showDialog(player, "dialog_id");
+ADialogAPI().getApi().showDialog(player, "dialog_id");
 ```
 
 ---
