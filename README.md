@@ -11,11 +11,11 @@
 
 ## ✨ Features
 
-* **MiniMessage Integration:** Full support for modern formatting (RGB, gradients, hover/click events).
-* **Action System:** Trigger commands, sounds, titles, potion effects, and inventory changes directly from dialog buttons.
-* **Dynamic Inputs:** Capture player input through the dialog interface and use it in commands or messages.
-* **Cooldown Support:** Prevent dialog spam with per-player cooldowns defined in config.
-* **Developer API:** Custom events for opening, clicking, and closing dialogs to build complex logic.
+- **MiniMessage Integration:** Full support for modern formatting (RGB, gradients, hover/click events).
+- **Action System:** Trigger commands, sounds, titles, potion effects, and inventory changes directly from dialog buttons.
+- **Dynamic Inputs:** Capture player input through the dialog interface and use it in commands or messages.
+- **Cooldown Support:** Prevent dialog spam with per-player cooldowns defined in config.
+- **Developer API:** Custom events for opening, clicking, and closing dialogs to build complex logic.
 
 ---
 
@@ -116,9 +116,9 @@ The main command is `/adialogapi` (aliases: `/adapi`).
 
 ## 🤝 Support
 
-* **Issues:** Report bugs or request features via [GitHub Issues](https://github.com/isArkaDarkTime/ADialogAPI/issues).
-* **Discussions:** Ask questions and share your configs in the [Discussions](https://github.com/isArkaDarkTime/ADialogAPI/discussions) tab.
-* **Official Discord server:** [ArkaDarkTime Hub](https://dsc.gg/arkadarktimehub)
+- **Issues:** Report bugs or request features via [GitHub Issues](https://github.com/isArkaDarkTime/ADialogAPI/issues).
+- **Discussions:** Ask questions and share your configs in the [Discussions](https://github.com/isArkaDarkTime/ADialogAPI/discussions) tab.
+- **Discord server:** My official discord server for support, bug-reports and fun - [ArkaDarkTime Hub](https://dsc.gg/arkadarktimehub).
 
 ---
 
