@@ -118,6 +118,7 @@ The main command is `/adialogapi` (aliases: `/adapi`).
 
 * **Issues:** Report bugs or request features via [GitHub Issues](https://github.com/isArkaDarkTime/ADialogAPI/issues).
 * **Discussions:** Ask questions and share your configs in the [Discussions](https://github.com/isArkaDarkTime/ADialogAPI/discussions) tab.
+* **Official Discord server:** [ArkaDarkTime Hub](https://dsc.gg/arkadarktimehub)
 
 ---
 
