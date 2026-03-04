@@ -1,9 +1,9 @@
 # ADialogAPI
 
-![GitHub Release](https://img.shields.io/github/v/release/isArkaDarkTime/ADialogAPI?style=flat-square)
-![License](https://img.shields.io/github/license/isArkaDarkTime/ADialogAPI?style=flat-square&color=blue)
-![Java Version](https://img.shields.io/badge/Java-17%2B-orange?style=flat-square)
-![Platform](https://img.shields.io/badge/Platform-Paper%20-green?style=flat-square)
+![Modrinth Downloads](https://img.shields.io/modrinth/dt/adialogapi?style=for-the-badge&logo=modrinth&color=blue)
+![License](https://img.shields.io/github/license/isArkaDarkTime/ADialogAPI?style=for-the-badge&color=blue)
+![Java Version](https://img.shields.io/badge/Java-17%2B-orange?style=for-the-badge&)
+![Platform](https://img.shields.io/badge/Platform-Paper%20-green?style=for-the-badge&)
 
 **ADialogAPI** is a modern, high-performance interactive dialog system for Minecraft servers. It allows you to create immersive RPG-like conversations, complex menus, and user-input forms using simple YAML or a powerful Java API.
 
