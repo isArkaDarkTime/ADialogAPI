@@ -2,7 +2,7 @@ package me.arkadarktime.aDialogAPI.actions;
 
 import me.arkadarktime.aDialogAPI.ADialogAPI;
 import me.arkadarktime.aDialogAPI.actions.impl.*;
-import me.arkadarktime.aDialogAPI.models.Utils;
+import me.arkadarktime.aDialogAPI.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

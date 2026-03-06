@@ -1,9 +1,9 @@
-package me.arkadarktime.aDialogAPI.commands.subcommands.adialogapi;
+package me.arkadarktime.aDialogAPI.commands.adialogapi.subcommands;
 
 import me.arkadarktime.aDialogAPI.ADialogAPI;
 import me.arkadarktime.aDialogAPI.commands.core.SubCommand;
-import me.arkadarktime.aDialogAPI.models.Messages;
-import me.arkadarktime.aDialogAPI.models.Permissions;
+import me.arkadarktime.aDialogAPI.config.Messages;
+import me.arkadarktime.aDialogAPI.config.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

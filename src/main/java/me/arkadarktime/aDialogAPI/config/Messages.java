@@ -1,4 +1,4 @@
-package me.arkadarktime.aDialogAPI.models;
+package me.arkadarktime.aDialogAPI.config;
 
 public final class Messages {
     private Messages() {

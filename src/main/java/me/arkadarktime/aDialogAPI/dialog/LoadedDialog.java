@@ -1,4 +1,4 @@
-package me.arkadarktime.aDialogAPI.models;
+package me.arkadarktime.aDialogAPI.dialog;
 
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.event.player.PlayerCustomClickEvent;

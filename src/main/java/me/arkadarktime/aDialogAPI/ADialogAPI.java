@@ -1,11 +1,11 @@
 package me.arkadarktime.aDialogAPI;
 
-import me.arkadarktime.aDialogAPI.commands.DialogCommand;
+import me.arkadarktime.aDialogAPI.commands.adialogapi.DialogCommand;
 import me.arkadarktime.aDialogAPI.listeners.DialogListener;
 import me.arkadarktime.aDialogAPI.managers.CooldownManager;
 import me.arkadarktime.aDialogAPI.managers.DialogManager;
 import me.arkadarktime.aDialogAPI.managers.LangManager;
-import me.arkadarktime.aDialogAPI.models.Constants;
+import me.arkadarktime.aDialogAPI.config.Constants;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ADialogAPI extends JavaPlugin {

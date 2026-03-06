@@ -1,8 +1,8 @@
 package me.arkadarktime.aDialogAPI.managers;
 
 import me.arkadarktime.aDialogAPI.ADialogAPI;
-import me.arkadarktime.aDialogAPI.models.Constants;
-import me.arkadarktime.aDialogAPI.models.Messages;
+import me.arkadarktime.aDialogAPI.config.Constants;
+import me.arkadarktime.aDialogAPI.config.Messages;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;

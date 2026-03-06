@@ -1,4 +1,4 @@
-package me.arkadarktime.aDialogAPI.models;
+package me.arkadarktime.aDialogAPI.dialog;
 
 public record InputMeta(String type, String onTrue, String onFalse, String defaultValue) {
 

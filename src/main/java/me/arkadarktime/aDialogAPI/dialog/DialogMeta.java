@@ -1,4 +1,4 @@
-package me.arkadarktime.aDialogAPI.models;
+package me.arkadarktime.aDialogAPI.dialog;
 
 public record DialogMeta(String name, String type, String filePath, String openCommand, String openPermission,
                          boolean canEscape, int bodyCount, long cooldownSeconds) {

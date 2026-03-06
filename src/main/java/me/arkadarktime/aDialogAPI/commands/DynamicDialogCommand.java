@@ -1,8 +1,8 @@
 package me.arkadarktime.aDialogAPI.commands;
 
 import me.arkadarktime.aDialogAPI.ADialogAPI;
-import me.arkadarktime.aDialogAPI.models.DialogMeta;
-import me.arkadarktime.aDialogAPI.models.Messages;
+import me.arkadarktime.aDialogAPI.dialog.DialogMeta;
+import me.arkadarktime.aDialogAPI.config.Messages;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

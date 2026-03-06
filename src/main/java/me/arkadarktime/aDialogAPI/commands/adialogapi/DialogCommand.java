@@ -1,10 +1,10 @@
-package me.arkadarktime.aDialogAPI.commands;
+package me.arkadarktime.aDialogAPI.commands.adialogapi;
 
 import me.arkadarktime.aDialogAPI.ADialogAPI;
+import me.arkadarktime.aDialogAPI.commands.adialogapi.subcommands.*;
 import me.arkadarktime.aDialogAPI.commands.core.BaseCommand;
 import me.arkadarktime.aDialogAPI.commands.core.SubCommand;
-import me.arkadarktime.aDialogAPI.commands.subcommands.adialogapi.*;
-import me.arkadarktime.aDialogAPI.models.Messages;
+import me.arkadarktime.aDialogAPI.config.Messages;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

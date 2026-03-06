@@ -1,6 +1,6 @@
 package me.arkadarktime.aDialogAPI.events;
 
-import me.arkadarktime.aDialogAPI.models.DialogMeta;
+import me.arkadarktime.aDialogAPI.dialog.DialogMeta;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
