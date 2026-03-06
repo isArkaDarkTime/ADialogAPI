@@ -2,16 +2,15 @@ package me.arkadarktime.aDialogAPI.managers;
 
 import io.papermc.paper.dialog.Dialog;
 import me.arkadarktime.aDialogAPI.ADialogAPI;
-import me.arkadarktime.aDialogAPI.actions.DialogActionExecutor;
-import me.arkadarktime.aDialogAPI.commands.DynamicDialogCommand;
-import me.arkadarktime.aDialogAPI.events.DialogButtonClickEvent;
-import me.arkadarktime.aDialogAPI.events.DialogCloseEvent;
-import me.arkadarktime.aDialogAPI.events.DialogOpenEvent;
 import me.arkadarktime.aDialogAPI.actions.ButtonAction;
+import me.arkadarktime.aDialogAPI.commands.DynamicDialogCommand;
 import me.arkadarktime.aDialogAPI.dialog.DialogMeta;
 import me.arkadarktime.aDialogAPI.dialog.LoadedDialog;
 import me.arkadarktime.aDialogAPI.dialog.ParsedInputs;
 import me.arkadarktime.aDialogAPI.dialog.parsing.DialogParser;
+import me.arkadarktime.aDialogAPI.events.DialogButtonClickEvent;
+import me.arkadarktime.aDialogAPI.events.DialogCloseEvent;
+import me.arkadarktime.aDialogAPI.events.DialogOpenEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,7 +36,6 @@ public class DialogManager {
 
     private final ADialogAPI plugin;
     private final DialogParser parser;
-    private final DialogActionExecutor actionExecutor;
 
     private final Map<String, LoadedDialog> registry = new HashMap<>();
     private final Set<String> registeredCommands = new HashSet<>();
@@ -45,7 +43,6 @@ public class DialogManager {
     public DialogManager(ADialogAPI plugin) {
         this.plugin = plugin;
         this.parser = new DialogParser(plugin);
-        this.actionExecutor = new DialogActionExecutor(plugin);
     }
 
     // Loading
@@ -157,7 +154,7 @@ public class DialogManager {
                 + " clicked '" + buttonId + "' in '" + meta.name()
                 + "' - " + actions.size() + " action(s), inputs: " + inputs);
 
-        actionExecutor.executeAll(player, actions, inputs);
+        ButtonAction.executeAll(player, actions, inputs, plugin);
     }
 
     // Getters

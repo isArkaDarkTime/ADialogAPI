@@ -4,6 +4,7 @@ import me.arkadarktime.aDialogAPI.ADialogAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ButtonAction {
@@ -19,5 +20,12 @@ public interface ButtonAction {
             input = input.replace("<input:" + entry.getKey() + ">", entry.getValue());
         }
         return input.replace("<player>", player.getName());
+    }
+
+    static void executeAll(Player player, List<ButtonAction> actions, Map<String, String> inputs, ADialogAPI plugin) {
+        for (ButtonAction action : actions) {
+            plugin.debug("[ActionExecutor] " + action.getTypeName() + " | player=" + player.getName());
+            action.execute(player, inputs, plugin);
+        }
     }
 }
