@@ -2,11 +2,12 @@ package me.arkadarktime.aDialogAPI.managers;
 
 import io.papermc.paper.dialog.Dialog;
 import me.arkadarktime.aDialogAPI.ADialogAPI;
+import me.arkadarktime.aDialogAPI.actions.DialogActionExecutor;
 import me.arkadarktime.aDialogAPI.commands.DynamicDialogCommand;
 import me.arkadarktime.aDialogAPI.events.DialogButtonClickEvent;
 import me.arkadarktime.aDialogAPI.events.DialogCloseEvent;
 import me.arkadarktime.aDialogAPI.events.DialogOpenEvent;
-import me.arkadarktime.aDialogAPI.models.ButtonAction;
+import me.arkadarktime.aDialogAPI.actions.ButtonAction;
 import me.arkadarktime.aDialogAPI.models.DialogMeta;
 import me.arkadarktime.aDialogAPI.models.LoadedDialog;
 import me.arkadarktime.aDialogAPI.models.ParsedInputs;

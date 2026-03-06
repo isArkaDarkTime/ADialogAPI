@@ -2,6 +2,7 @@ package me.arkadarktime.aDialogAPI.models;
 
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.event.player.PlayerCustomClickEvent;
+import me.arkadarktime.aDialogAPI.actions.ButtonAction;
 
 import java.io.File;
 import java.util.Collections;
@@ -44,16 +45,12 @@ public final class LoadedDialog {
         return file;
     }
 
-    public List<ButtonAction> getActions(String buttonId) {
-        return buttonActions.getOrDefault(buttonId.toLowerCase(), List.of());
-    }
-
     public Map<String, String> getInputs() {
         return inputs;
     }
 
-    public Map<String, InputMeta> getInputMetas() {
-        return inputMetas;
+    public List<ButtonAction> getActions(String buttonId) {
+        return buttonActions.getOrDefault(buttonId.toLowerCase(), List.of());
     }
 
     public String getName() {
@@ -71,6 +68,8 @@ public final class LoadedDialog {
     public boolean hasOpenCommand() {
         return !meta.openCommand().isEmpty();
     }
+
+    // Input resolving
 
     @SuppressWarnings("UnstableApiUsage")
     public Map<String, String> resolveInputsFromEvent(PlayerCustomClickEvent event) {

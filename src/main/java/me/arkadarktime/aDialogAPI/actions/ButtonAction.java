@@ -1,0 +1,23 @@
+package me.arkadarktime.aDialogAPI.actions;
+
+import me.arkadarktime.aDialogAPI.ADialogAPI;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.entity.Player;
+
+import java.util.Map;
+
+public abstract class ButtonAction {
+
+    public abstract String getTypeName();
+
+    public abstract void execute(Player player, Map<String, String> inputs, ADialogAPI plugin);
+
+    protected final MiniMessage mm = MiniMessage.miniMessage();
+
+    protected final String applyPlaceholders(String input, Player player, Map<String, String> inputs) {
+        for (Map.Entry<String, String> entry : inputs.entrySet()) {
+            input = input.replace("<input:" + entry.getKey() + ">", entry.getValue());
+        }
+        return input.replace("<player>", player.getName());
+    }
+}

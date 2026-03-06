@@ -9,7 +9,12 @@ import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput;
 import io.papermc.paper.registry.data.dialog.type.DialogType;
 import me.arkadarktime.aDialogAPI.ADialogAPI;
-import me.arkadarktime.aDialogAPI.models.*;
+import me.arkadarktime.aDialogAPI.actions.ActionFactory;
+import me.arkadarktime.aDialogAPI.actions.ButtonAction;
+import me.arkadarktime.aDialogAPI.models.DialogMeta;
+import me.arkadarktime.aDialogAPI.models.InputMeta;
+import me.arkadarktime.aDialogAPI.models.ParsedInputs;
+import me.arkadarktime.aDialogAPI.models.Utils;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -31,13 +36,13 @@ public class DialogParser {
 
     private final BodyParser bodyParser;
     private final InputParser inputParser;
-    private final ActionParser actionParser;
+    private final ActionFactory actionFactory;
 
     public DialogParser(ADialogAPI plugin) {
         this.plugin = plugin;
         this.bodyParser = new BodyParser(plugin, mm);
         this.inputParser = new InputParser(plugin, mm);
-        this.actionParser = new ActionParser(plugin);
+        this.actionFactory = new ActionFactory(plugin);
     }
 
     // Public
@@ -79,8 +84,10 @@ public class DialogParser {
     }
 
     public Map<String, List<ButtonAction>> parseButtonActions(String id, FileConfiguration config) {
-        return actionParser.parse(id, config);
+        return actionFactory.parseAll(id, config);
     }
+
+    // Dialog type builder
 
     private Dialog buildTypedDialog(String id, String type, DialogBase base, FileConfiguration config, Map<String, List<ButtonAction>> actions) {
         return switch (type) {
@@ -345,134 +352,6 @@ public class DialogParser {
             }
             String optId = raw.toString();
             return SingleOptionDialogInput.OptionEntry.create(optId, Component.text(optId), false);
-        }
-    }
-
-    // Action parsing
-
-    static final class ActionParser {
-        private final ADialogAPI plugin;
-
-        ActionParser(ADialogAPI plugin) {
-            this.plugin = plugin;
-        }
-
-        Map<String, List<ButtonAction>> parse(String id, FileConfiguration config) {
-            ConfigurationSection actionsSection = config.getConfigurationSection("actions");
-            if (actionsSection == null) return Map.of();
-
-            Map<String, List<ButtonAction>> result = new HashMap<>();
-
-            for (String buttonKey : actionsSection.getKeys(false)) {
-                ConfigurationSection buttonSection = actionsSection.getConfigurationSection(buttonKey);
-                if (buttonSection == null) continue;
-
-                List<ButtonAction> list = buttonSection.getMapList("after_actions").stream()
-                        .map(entry -> parseAction(entry, buttonKey, id))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .toList();
-
-                if (!list.isEmpty()) result.put(buttonKey.toLowerCase(), list);
-            }
-            return Collections.unmodifiableMap(result);
-        }
-
-        private Optional<ButtonAction> parseAction(Map<?, ?> entry, String buttonKey, String dialogId) {
-            Object typeObj = entry.get("type");
-            if (typeObj == null) {
-                plugin.getLogger().warning("[ActionParser] after_action missing 'type' on button '" + buttonKey + "' in '" + dialogId + "'");
-                return Optional.empty();
-            }
-
-            ButtonAction.Type type = ButtonAction.Type.fromString(typeObj.toString());
-            if (type == null) {
-                plugin.getLogger().warning("[ActionParser] Unknown after_action type '" + typeObj + "' on button '" + buttonKey + "' in '" + dialogId + "'");
-                return Optional.empty();
-            }
-
-            if (type == ButtonAction.Type.CLOSE) return Optional.of(new ButtonAction(type));
-
-            return switch (type) {
-                case GIVE_ITEM, TAKE_ITEM -> parseItemAction(type, entry, buttonKey, dialogId);
-                case TITLE -> parseTitleAction(entry);
-                case SOUND -> parseSoundAction(entry, buttonKey, dialogId);
-                case POTION_EFFECT -> parsePotionAction(entry, buttonKey, dialogId);
-                case XP -> parseXpAction(entry, buttonKey, dialogId);
-                default -> parseValueAction(type, entry, buttonKey, dialogId);
-            };
-        }
-
-        private Optional<ButtonAction> parseItemAction(ButtonAction.Type type, Map<?, ?> entry, String buttonKey, String dialogId) {
-            Object matObj = entry.get("material");
-            if (matObj == null || matObj.toString().isBlank()) {
-                plugin.getLogger().warning("[ActionParser] '" + type + "' missing 'material' on button '" + buttonKey + "' in '" + dialogId + "'");
-                return Optional.empty();
-            }
-
-            int count = Utils.parseIntSafe(entry.get("count"), 1);
-            return Optional.of(new ButtonAction(type, matObj.toString().toUpperCase() + ":" + count));
-        }
-
-        private Optional<ButtonAction> parseTitleAction(Map<?, ?> entry) {
-            String title = Utils.resolveString(entry, "title", "value");
-            String subtitle = entry.containsKey("subtitle") ? entry.get("subtitle").toString() : "";
-            int fadeIn = Utils.parseIntSafe(entry.get("fade_in"), 10);
-            int stay = Utils.parseIntSafe(entry.get("stay"), 70);
-            int fadeOut = Utils.parseIntSafe(entry.get("fade_out"), 20);
-            String encoded = (title != null ? title : "") + ";" + subtitle + ";" + fadeIn + ";" + stay + ";" + fadeOut;
-            return Optional.of(new ButtonAction(ButtonAction.Type.TITLE, encoded));
-        }
-
-        private Optional<ButtonAction> parseSoundAction(Map<?, ?> entry, String buttonKey, String dialogId) {
-            String sound = Utils.resolveString(entry, "sound", "value");
-            if (sound == null || sound.isBlank()) {
-                plugin.getLogger().warning("[ActionParser] 'SOUND' missing 'sound' on button '" + buttonKey + "' in '" + dialogId + "'");
-                return Optional.empty();
-            }
-
-            float volume = Utils.parseFloatSafe(entry.get("volume"), 1.0f);
-            float pitch = Utils.parseFloatSafe(entry.get("pitch"), 1.0f);
-            return Optional.of(new ButtonAction(ButtonAction.Type.SOUND, sound + ";" + volume + ";" + pitch));
-        }
-
-        private Optional<ButtonAction> parsePotionAction(Map<?, ?> entry, String buttonKey, String dialogId) {
-            String effect = Utils.resolveString(entry, "effect", "value");
-            if (effect == null || effect.isBlank()) {
-                plugin.getLogger().warning("[ActionParser] 'POTION_EFFECT' missing 'effect' on button '" + buttonKey + "' in '" + dialogId + "'");
-                return Optional.empty();
-            }
-
-            int duration = Utils.parseIntSafe(entry.get("duration"), 200);
-            int amplifier = Utils.parseIntSafe(entry.get("amplifier"), 0);
-            return Optional.of(new ButtonAction(ButtonAction.Type.POTION_EFFECT, effect.toUpperCase() + ";" + duration + ";" + amplifier));
-        }
-
-        private Optional<ButtonAction> parseXpAction(Map<?, ?> entry, String buttonKey, String dialogId) {
-            Object amount = entry.containsKey("amount") ? entry.get("amount") : entry.get("value");
-            if (amount == null || amount.toString().isBlank()) {
-                plugin.getLogger().warning("[ActionParser] 'XP' missing 'amount' on button '" + buttonKey + "' in '" + dialogId + "'");
-                return Optional.empty();
-            }
-
-            boolean levels = Utils.parseBoolSafe(entry.get("levels"), false);
-            return Optional.of(new ButtonAction(ButtonAction.Type.XP, (levels ? "L:" : "P:") + amount));
-        }
-
-        private Optional<ButtonAction> parseValueAction(ButtonAction.Type type, Map<?, ?> entry, String buttonKey, String dialogId) {
-            String value = switch (type) {
-                case RUN_COMMAND, CONSOLE_COMMAND -> Utils.resolveString(entry, "command", "value");
-                case MESSAGE, BROADCAST -> Utils.resolveString(entry, "content", "message", "value");
-                case SHOW_DIALOG -> Utils.resolveString(entry, "dialog", "value");
-                default -> Utils.resolveString(entry, "value");
-            };
-
-            if (value == null || value.isBlank()) {
-                plugin.getLogger().warning("[ActionParser] '" + type + "' missing value on button '" + buttonKey + "' in '" + dialogId + "'");
-                return Optional.empty();
-            }
-
-            return Optional.of(new ButtonAction(type, value));
         }
     }
 }
