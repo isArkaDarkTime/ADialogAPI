@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Map;
 
-public final class PotionEffectAction extends ButtonAction {
+public final class PotionEffectAction implements ButtonAction {
 
     private final PotionEffectType effectType;
     private final int duration;

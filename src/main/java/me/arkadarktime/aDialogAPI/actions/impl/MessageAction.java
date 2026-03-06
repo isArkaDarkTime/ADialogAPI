@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public final class MessageAction extends ButtonAction {
+public final class MessageAction implements ButtonAction {
 
     private final String contentTemplate;
 

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public final class SoundAction extends ButtonAction {
+public final class SoundAction implements ButtonAction {
 
     private final String soundName;
     private final float volume;

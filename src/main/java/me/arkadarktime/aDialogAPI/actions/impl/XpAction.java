@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public final class XpAction extends ButtonAction {
+public final class XpAction implements ButtonAction {
 
     private final int amount;
     private final boolean levels;

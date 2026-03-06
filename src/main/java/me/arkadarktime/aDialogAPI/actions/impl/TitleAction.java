@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import java.time.Duration;
 import java.util.Map;
 
-public final class TitleAction extends ButtonAction {
+public final class TitleAction implements ButtonAction {
 
     private final String titleTemplate;
     private final String subtitleTemplate;

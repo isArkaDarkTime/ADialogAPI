@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public final class ShowDialogAction extends ButtonAction {
+public final class ShowDialogAction implements ButtonAction {
 
     private final String dialogName;
 

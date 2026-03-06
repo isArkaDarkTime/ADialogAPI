@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public final class CloseAction extends ButtonAction {
+public final class CloseAction implements ButtonAction {
 
     @Override
     public String getTypeName() {

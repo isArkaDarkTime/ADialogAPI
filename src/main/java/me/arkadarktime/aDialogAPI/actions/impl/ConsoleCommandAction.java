@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public class ConsoleCommandAction extends ButtonAction {
+public class ConsoleCommandAction implements ButtonAction {
 
     private final String commandTemplate;
 

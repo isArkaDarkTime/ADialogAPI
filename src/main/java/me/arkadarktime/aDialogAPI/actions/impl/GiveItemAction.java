@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
-public final class GiveItemAction extends ButtonAction {
+public final class GiveItemAction implements ButtonAction {
 
     private final Material material;
     private final int count;

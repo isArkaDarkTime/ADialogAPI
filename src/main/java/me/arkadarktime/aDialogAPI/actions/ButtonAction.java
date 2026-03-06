@@ -6,15 +6,15 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public abstract class ButtonAction {
+public interface ButtonAction {
 
-    public abstract String getTypeName();
+    String getTypeName();
 
-    public abstract void execute(Player player, Map<String, String> inputs, ADialogAPI plugin);
+    void execute(Player player, Map<String, String> inputs, ADialogAPI plugin);
 
-    protected final MiniMessage mm = MiniMessage.miniMessage();
+    MiniMessage mm = MiniMessage.miniMessage();
 
-    protected final String applyPlaceholders(String input, Player player, Map<String, String> inputs) {
+    default String applyPlaceholders(String input, Player player, Map<String, String> inputs) {
         for (Map.Entry<String, String> entry : inputs.entrySet()) {
             input = input.replace("<input:" + entry.getKey() + ">", entry.getValue());
         }

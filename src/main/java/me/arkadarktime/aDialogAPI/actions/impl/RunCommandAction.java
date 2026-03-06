@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-public class RunCommandAction extends ButtonAction {
+public class RunCommandAction implements ButtonAction {
 
     private final String commandTemplate;
 
