@@ -9,13 +9,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class ActionFactory {
 
     private final ADialogAPI plugin;
+    Map<String, Function<ConfigNode, Optional<ButtonAction>>> registry = new LinkedHashMap<>();
 
     public ActionFactory(ADialogAPI plugin) {
         this.plugin = plugin;
+        this.registry = buildRegistry();
     }
 
     public Map<String, List<ButtonAction>> parseAll(String dialogId, FileConfiguration config) {
@@ -43,129 +46,142 @@ public class ActionFactory {
     public Optional<ButtonAction> create(Map<?, ?> entry, String buttonKey, String dialogId) {
         Object typeObj = entry.get("type");
         if (typeObj == null) {
-            plugin.getLogger().warning("[ActionFactory] Missing 'type' on button '" + buttonKey
-                    + "' in '" + dialogId + "'");
+            warn("Missing 'type' on button '" + buttonKey + "' in '" + dialogId + "'");
             return Optional.empty();
         }
 
-        return switch (typeObj.toString().toLowerCase()) {
-            case "command", "player_command", "player", "run_command" ->
-                    requireText(entry, "command", buttonKey, dialogId).map(RunCommandAction::new);
+        String type = typeObj.toString().toLowerCase();
+        Function<ConfigNode, Optional<ButtonAction>> parser = registry.get(type);
 
-            case "console", "console_command" ->
-                    requireText(entry, "command", buttonKey, dialogId).map(ConsoleCommandAction::new);
+        if (parser == null) {
+            warn("Unknown action type '" + type + "' on button " + buttonKey + "' in '" + dialogId + "'");
+            return Optional.empty();
+        }
 
-            case "message", "send_message" ->
-                    requireText(entry, "content", buttonKey, dialogId).map(MessageAction::new);
-
-            case "broadcast", "broadcast_message" ->
-                    requireText(entry, "content", buttonKey, dialogId).map(BroadcastAction::new);
-
-            case "show_dialog", "open_dialog" ->
-                    requireText(entry, "dialog", buttonKey, dialogId).map(ShowDialogAction::new);
-
-            case "give_item", "giveitem", "give", "item" -> parseItemAction(entry, buttonKey, dialogId, false);
-
-            case "take_item", "takeitem", "remove_item" -> parseItemAction(entry, buttonKey, dialogId, true);
-
-            case "title", "send_title" -> parseTitleAction(entry);
-            case "sound", "play_sound" -> parseSoundAction(entry, buttonKey, dialogId);
-            case "effect", "potion_effect", "give_effect" -> parsePotionAction(entry, buttonKey, dialogId);
-            case "xp", "give_xp", "experience" -> parseXpAction(entry, buttonKey, dialogId);
-            case "close" -> Optional.of(new CloseAction());
-
-            default -> {
-                plugin.getLogger().warning("[ActionFactory] Unknown action type '" + typeObj + "' on button '" + buttonKey
-                        + "' in '" + dialogId + "'");
-                yield Optional.empty();
-            }
-        };
+        return parser.apply(new ConfigNode(entry, buttonKey, dialogId));
     }
 
-    private Optional<ButtonAction> parseItemAction(Map<?, ?> entry, String buttonKey, String dialogId, boolean take) {
-        Object matObj = entry.get("material");
+    private Map<String, Function<ConfigNode, Optional<ButtonAction>>> buildRegistry() {
+        Map<String, Function<ConfigNode, Optional<ButtonAction>>> r = new LinkedHashMap<>();
+
+        register(r, n -> requireText(n, "command").map(RunCommandAction::new),
+                "command", "run_command", "player_command", "player");
+
+        register(r, n -> requireText(n, "command").map(ConsoleCommandAction::new),
+                "console", "console_command");
+
+        register(r, n -> requireText(n, "content").map(MessageAction::new),
+                "message", "send_message");
+
+        register(r, n -> requireText(n, "content").map(BroadcastAction::new),
+                "broadcast", "broadcast_message");
+
+        register(r, n -> requireText(n, "dialog").map(ShowDialogAction::new),
+                "show_dialog", "open_dialog");
+
+        register(r, n -> parseItemAction(n, false), "give_item", "giveitem", "give", "item");
+        register(r, n -> parseItemAction(n, true), "take_item", "takeitem", "remove_item");
+        register(r, this::parseTitleAction, "title", "send_title");
+        register(r, this::parseSoundAction, "sound", "play_sound");
+        register(r, this::parsePotionAction, "effect", "potion_effect", "give_effect");
+        register(r, this::parseXpAction, "xp", "give_xp", "experience");
+        register(r, n -> Optional.of(new CloseAction()), "close");
+
+        return Collections.unmodifiableMap(r);
+    }
+
+    private void register(Map<String, Function<ConfigNode, Optional<ButtonAction>>> r,
+                          Function<ConfigNode, Optional<ButtonAction>> parser,
+                          String... aliases) {
+        for (String alias : aliases) r.put(alias, parser);
+    }
+
+    // Parsers
+
+    private Optional<ButtonAction> parseItemAction(ConfigNode configNode, boolean take) {
+        Object matObj = configNode.entry().get("material");
         if (matObj == null || matObj.toString().isBlank()) {
-            plugin.getLogger().warning("[ActionFactory] Item action missing 'material' on button '" + buttonKey
-                    + "' in '" + dialogId + "'");
+            warn("Item action missing 'material' on button '" + configNode.buttonKey() + "' in '" + configNode.dialogId() + "'");
             return Optional.empty();
         }
 
         Material material = Material.matchMaterial(matObj.toString());
         if (material == null) {
-            plugin.getLogger().warning("[ActionFactory] Unknown material '" + matObj
-                    + "' on button '" + buttonKey
-                    + "' in '" + dialogId + "'");
+            warn("Unknown material '" + matObj + "' on button '" + configNode.buttonKey() + "' in '" + configNode.dialogId() + "'");
             return Optional.empty();
         }
 
-        int count = Utils.parseIntSafe(entry.get("count"), 1);
+        int count = Utils.parseIntSafe(configNode.entry().get("count"), 1);
         return Optional.of(take ? new TakeItemAction(material, count) : new GiveItemAction(material, count));
     }
 
-    private Optional<ButtonAction> parseTitleAction(Map<?, ?> entry) {
-        String title = Utils.resolveString(entry, "title", "value");
-        String subtitle = entry.containsKey("subtitle") ? entry.get("subtitle").toString() : "";
-        int fadeIn = Utils.parseIntSafe(entry.get("fade_in"), 10);
-        int stay = Utils.parseIntSafe(entry.get("stay"), 70);
-        int fadeOut = Utils.parseIntSafe(entry.get("fade_out"), 20);
+    private Optional<ButtonAction> parseTitleAction(ConfigNode configNode) {
+        String title = Utils.resolveString(configNode.entry(), "title", "value");
+        String subtitle = configNode.entry().containsKey("subtitle") ? configNode.entry().get("subtitle").toString() : "";
+        int fadeIn = Utils.parseIntSafe(configNode.entry().get("fade_in"), 10);
+        int stay = Utils.parseIntSafe(configNode.entry().get("stay"), 70);
+        int fadeOut = Utils.parseIntSafe(configNode.entry().get("fade_out"), 20);
         return Optional.of(new TitleAction(title != null ? title : "", subtitle, fadeIn, stay, fadeOut));
     }
 
-    private Optional<ButtonAction> parseSoundAction(Map<?, ?> entry, String buttonKey, String dialogId) {
-        String sound = Utils.resolveString(entry, "sound", "value");
+    private Optional<ButtonAction> parseSoundAction(ConfigNode configNode) {
+        String sound = Utils.resolveString(configNode.entry(), "sound", "value");
         if (sound == null || sound.isBlank()) {
-            plugin.getLogger().warning("[ActionFactory] 'sound' missing on button '" + buttonKey
-                    + "' in '" + dialogId + "'");
+            warn("'sound' missing on button '" + configNode.buttonKey() + "' in '" + configNode.dialogId() + "'");
             return Optional.empty();
         }
-        float volume = Utils.parseFloatSafe(entry.get("volume"), 1.0f);
-        float pitch = Utils.parseFloatSafe(entry.get("pitch"), 1.0f);
+
+        float volume = Utils.parseFloatSafe(configNode.entry().get("volume"), 1.0f);
+        float pitch = Utils.parseFloatSafe(configNode.entry().get("pitch"), 1.0f);
         return Optional.of(new SoundAction(sound, volume, pitch));
     }
 
-    private Optional<ButtonAction> parsePotionAction(Map<?, ?> entry, String buttonKey, String dialogId) {
-        String effectName = Utils.resolveString(entry, "effect", "value");
+    private Optional<ButtonAction> parsePotionAction(ConfigNode configNode) {
+        String effectName = Utils.resolveString(configNode.entry(), "effect", "value");
         if (effectName == null || effectName.isBlank()) {
-            plugin.getLogger().warning("[ActionFactory] 'effect' missing on button '" + buttonKey
-                    + "' in '" + dialogId + "'");
+            warn("'effect' missing on button '" + configNode.buttonKey() + "' in '" + configNode.dialogId() + "'");
             return Optional.empty();
         }
 
         @SuppressWarnings("deprecation")
         PotionEffectType effectType = PotionEffectType.getByName(effectName.toUpperCase());
         if (effectType == null) {
-            plugin.getLogger().warning("[ActionFactory] Unknown potion effect '" + effectName
-                    + "' on button '" + buttonKey
-                    + "' in '" + dialogId + "'");
+            warn("Unknown potion effect '" + effectName + "' on button '" + configNode.buttonKey() + "' in '" + configNode.dialogId() + "'");
             return Optional.empty();
         }
 
-        int duration = Utils.parseIntSafe(entry.get("duration"), 200);
-        int amplifier = Utils.parseIntSafe(entry.get("amplifier"), 0);
+        int duration = Utils.parseIntSafe(configNode.entry().get("duration"), 200);
+        int amplifier = Utils.parseIntSafe(configNode.entry().get("amplifier"), 0);
         return Optional.of(new PotionEffectAction(effectType, duration, amplifier));
     }
 
-    private Optional<ButtonAction> parseXpAction(Map<?, ?> entry, String buttonKey, String dialogId) {
-        Object amount = entry.containsKey("amount") ? entry.get("amount") : entry.get("value");
+    private Optional<ButtonAction> parseXpAction(ConfigNode configNode) {
+        Object amount = configNode.entry().containsKey("amount") ? configNode.entry().get("amount") : configNode.entry().get("value");
         if (amount == null || amount.toString().isBlank()) {
-            plugin.getLogger().warning("[ActionFactory] 'amount' missing on button '"
-                    + buttonKey + "' in '"
-                    + dialogId + "'");
+            warn("'amount' missing on button '" + configNode.buttonKey() + "' in '" + configNode.dialogId() + "'");
             return Optional.empty();
         }
-        boolean levels = Utils.parseBoolSafe(entry.get("levels"), false);
-        int xp = Utils.parseIntSafe(amount, 0);
-        return Optional.of(new XpAction(xp, levels));
+        boolean levels = Utils.parseBoolSafe(configNode.entry().get("levels"), false);
+        return Optional.of(new XpAction(Utils.parseIntSafe(amount, 0), levels));
     }
 
-    private Optional<String> requireText(Map<?, ?> entry, String primaryKey, String buttonKey, String dialogId) {
-        String value = Utils.resolveString(entry, primaryKey, "value");
+    // Helpers
+
+    private Optional<String> requireText(ConfigNode configNode, String primaryKey) {
+        String value = Utils.resolveString(configNode.entry(), primaryKey, "value");
         if (value == null || value.isBlank()) {
-            plugin.getLogger().warning("[ActionFactory] Missing '" + primaryKey
-                    + "' on button '" + buttonKey
-                    + "' in '" + dialogId + "'");
+            warn("Missing '" + primaryKey + "' on button '" + configNode.buttonKey() + "' in '" + configNode.dialogId() + "'");
             return Optional.empty();
         }
         return Optional.of(value);
+    }
+
+    private void warn(String message) {
+        plugin.getLogger().warning("[ActionFactory] " + message);
+    }
+
+    // ConfigNode
+
+    record ConfigNode(Map<?, ?> entry, String buttonKey, String dialogId) {
     }
 }
